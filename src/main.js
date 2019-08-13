@@ -1,10 +1,12 @@
 //import '@babel/polyfill';
 import Vue from 'vue';
 import '@/plugins/vuetify';
+import '@/plugins/Notify';
 import App from './App.vue';
 import router from '@/router';
 import store from '@/store';
 import '@fortawesome/fontawesome-free/css/all.css';
+import 'typeface-b612-mono';
 
 const startApp = () => {
 

@@ -1,14 +1,20 @@
 <template>
-    <v-layout row class="px-3 py-2 bottom-nav no-select elevation-2">
-        <router-link to="/" class="nav-link" exact>
-            <span class="nav-text">Dashboard</span>
-        </router-link>
-        <router-link to="/send" class="nav-link" exact>
-            <span class="nav-text">Send</span>
-        </router-link>
-        <router-link to="/receive" class="nav-link" exact>
-            <span class="nav-text">Receive</span>
-        </router-link>
+    <v-layout row class="no-select">
+        <v-flex xs4 d-flex align-center>
+            <router-link to="/" class="nav-link" exact>
+                <span class="nav-text">{{ strings.dashboard || 'Dashboard' }}</span>
+            </router-link>
+        </v-flex>
+        <v-flex xs4 d-flex align-center>
+            <router-link to="/send" class="nav-link" exact>
+                <span class="nav-text">{{ strings.send || 'Send' }}</span>
+            </router-link>
+        </v-flex>
+        <v-flex xs4 d-flex align-center>
+            <router-link to="/receive" class="nav-link" exact>
+                <span class="nav-text">{{ strings.receive || 'Receive' }}</span>
+            </router-link>
+        </v-flex>
     </v-layout>
 </template>
 
@@ -22,6 +28,9 @@ export default {
         return {};
     },
     computed: {
+        ...mapGetters({
+            strings: 'i18n/strings',
+        }),
         currentRoute () {
             return this.$route.meta.title;
         }
@@ -30,12 +39,6 @@ export default {
 </script>
 
 <style scoped>
-.bottom-nav {
-    flex-grow: 0;
-    flex-shrink: 0;
-    background-color: #2A2B30;
-    align-items: center;
-}
 .nav-link {
     color: #AEAEAE;
     font-size: 14px;
