@@ -26,7 +26,6 @@ const actions = {
         return state.walletService.createWallet(walletParams).then((response) => {
 
             commit('walletSetLoading', false);
-            dispatch('showKeys', response);
             return dispatch('onWalletOpen');
         }).catch((err) => {
 
@@ -145,9 +144,9 @@ const actions = {
             transfers.in = transfers.in || [];
             transfers.out = transfers.out || [];
 
-            if (state.walletInfo.transfers.in && transfers.in.length > state.walletInfo.transfers.in.length) {
+            if (state.transfers.in && (transfers.in.length > state.transfers.in.length)) {
 
-                let existingHashes = state.walletInfo.transfers.in.map(tx => tx.txid);
+                let existingHashes = state.transfers.in.map(tx => tx.txid);
                 let amountReceived = transfers.in.filter((tx) => {
 
                     return existingHashes.indexOf(tx.txid) < 0;
@@ -179,7 +178,7 @@ const actions = {
 
         return state.walletService.getKeys().then((response) => {
 
-            dispatch('showKeys', { address: state.walletInfo.address.address, seed: response.mnemonic });
+            dispatch('showKeys', { address: state.walletInfo.address.address, keys: response });
         }).catch((err) => {
 
             Vue.prototype.$notify.error(err.errorMessage || 'Wallet seed error');
@@ -193,6 +192,10 @@ const actions = {
     closeKeys: ({ commit, state }) => {
 
         commit('walletSetKeyDisplay', undefined);
+    },
+    setTxChartRange: ({ commit }, chartRange) => {
+
+        commit('walletSetTxChartRange', chartRange);
     }
 };
 

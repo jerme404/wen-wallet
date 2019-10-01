@@ -25,12 +25,15 @@ const actions = {
     },
     getExplorerInfo: ({ commit, state }) => {
 
+        commit('explorerSetLoading', true);
         return state.explorerService.getInfo().then((response) => {
-            
+
             commit('explorerSetInfo', response);
+            commit('explorerSetLoading', false);
         }).catch((err) => {
 
             commit('explorerSetError', err);
+            commit('explorerSetLoading', false);
         });
     }
 };

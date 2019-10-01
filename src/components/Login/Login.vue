@@ -2,29 +2,52 @@
     <v-layout column class="primary">
         <v-flex d-flex shrink>
             <v-layout row align-center class="pa-3 no-select">
-                <v-spacer v-if="isMobile"></v-spacer>
-                <img
-                    src="@/assets/logo.png"
-                    class="login-logo"
-                    v-bind:class="{ 'login-logo-mobile': isMobile }">
-                <v-spacer></v-spacer>
-                <login-menu v-if="!isMobile" :activeTab="activeTab" @setActiveTab="setActiveTab"></login-menu>
+                <v-flex xs3 md1>
+                    <v-layout row>
+                        <img
+                            v-if="!isMobile"
+                            src="@/assets/logo.png"
+                            class="login-logo"
+                            v-bind:class="{ 'login-logo-mobile': isMobile }">
+                    </v-layout>
+                </v-flex>
+                <v-spacer/>
+                <login-menu
+                    v-if="!isMobile"
+                    :activeTab="activeTab"
+                    @setActiveTab="setActiveTab">
+                </login-menu>
+                <v-layout
+                    row
+                    shrink
+                    @click="settingsDialog = true"
+                    class="px-2 py-1 ml-2 cursor-pointer">
+                    <v-icon
+                        size="22"
+                        class="settings-button">
+                        fas fa-fw fa-cog
+                    </v-icon>
+                </v-layout>
             </v-layout>
         </v-flex>
         <v-flex fill-height d-flex>
             <v-layout column align-center justify-center>
+                <img
+                    v-if="isMobile"
+                    src="@/assets/logo.png"
+                    class="login-logo login-logo-mobile">
                 <span class="py-2 display-1 no-select">{{ tagline }}</span>
                 <v-layout column shrink class="pa-3 login-container" v-if="activeTab == 'create'">
                     <v-text-field
                         v-model="username"
-                        class="px-1 login-input"
+                        class="px-1"
                         dark
                         color="#FAFAFA"
                         :label="strings.walletName">
                     </v-text-field>
                     <v-text-field
                         v-model="password"
-                        class="px-1 login-input"
+                        class="px-1"
                         dark
                         type="password"
                         color="#FAFAFA"
@@ -32,7 +55,7 @@
                     </v-text-field>
                     <v-text-field
                         v-model="passwordConfirm"
-                        class="px-1 login-input"
+                        class="px-1"
                         dark
                         type="password"
                         color="#FAFAFA"
@@ -52,7 +75,7 @@
                 <v-layout column shrink class="pa-3 login-container" v-else-if="activeTab == 'import'">
                     <v-text-field
                         v-model="username"
-                        class="px-1 login-input"
+                        class="px-1"
                         dark
                         color="#FAFAFA"
                         validate-on-blur
@@ -60,14 +83,14 @@
                     </v-text-field>
                     <v-text-field
                         v-model="seed"
-                        class="px-1 login-input"
+                        class="px-1"
                         dark
                         color="#FAFAFA"
                         :label="strings.seedPhrase">
                     </v-text-field>
                     <v-text-field
                         v-model="password"
-                        class="px-1 login-input"
+                        class="px-1"
                         dark
                         type="password"
                         color="#FAFAFA"
@@ -75,7 +98,7 @@
                     </v-text-field>
                     <v-text-field
                         v-model="passwordConfirm"
-                        class="px-1 login-input"
+                        class="px-1"
                         dark
                         type="password"
                         color="#FAFAFA"
@@ -95,14 +118,14 @@
                 <v-layout column shrink class="pa-3 login-container" v-else>
                     <v-text-field
                         v-model="username"
-                        class="px-1 login-input"
+                        class="px-1"
                         dark
                         color="#FAFAFA"
                         :label="strings.walletName">
                     </v-text-field>
                     <v-text-field
                         v-model="password"
-                        class="px-1 login-input"
+                        class="px-1"
                         dark
                         type="password"
                         color="#FAFAFA"
@@ -125,6 +148,13 @@
         <v-flex shrink class="pa-3">
             <login-menu v-if="isMobile" :activeTab="activeTab" @setActiveTab="setActiveTab"></login-menu>
         </v-flex>
+
+        <v-dialog
+            width="500"
+            persistent
+            v-model="settingsDialog">
+            <login-settings v-if="settingsDialog" @cancel="settingsDialog = false"/>
+        </v-dialog>
     </v-layout>
 </template>
 
@@ -133,16 +163,17 @@ import { WalletConfig } from '@/config';
 import { mapActions, mapGetters, mapState } from 'vuex';
 import store from '@/store';
 const LoginMenu = () => import('./components/LoginMenu');
+const LoginSettings = () => import('./components/LoginSettings');
 
 export default {
     name: 'login',
     components: {
-        'login-menu': LoginMenu
-    },
-    props: {
+        'login-menu': LoginMenu,
+        'login-settings': LoginSettings
     },
     data() {
         return {
+            settingsDialog: false,
             tagline: WalletConfig.tagline,
             username: '',
             password: '',
@@ -288,5 +319,12 @@ export default {
 .login-logo-mobile {
     width: auto;
     height: 48px;
+}
+.settings-button {
+    color: #DEDEDE;
+
+}
+.settings-button:hover {
+    color: #F7F7F7;
 }
 </style>

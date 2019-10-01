@@ -1,6 +1,9 @@
 <template>
     <v-flex xs12>
-        <span v-if="transfers.length === 0" class="headline text-sm-left no-select">
+        <v-layout column class="pa-3" v-if="walletLoading && transfers.length == 0">
+            <v-icon size="24" color="info">fas fa-spinner fa-spin</v-icon>
+        </v-layout>
+        <span v-else-if="transfers.length === 0" class="headline text-sm-left no-select">
             {{ strings.noTransactionsYet }}
         </span>
         <v-layout column v-else>
@@ -38,8 +41,8 @@
                 wrap
                 align-center
                 class="py-2 table-row"
-                v-for="(tx, index) in transfers"
-                :key="tx.txHash"
+                v-for="(tx, index) in transferList"
+                :key="index"
                 v-bind:class="{ 'row-divider': index != transfers.length - 1 }">
                 <v-flex xs6 md2 lg2 d-flex order-xs1 order-md1>
                     <span class="body-2 py-1 text-xs-left no-select">
@@ -78,14 +81,27 @@
                     </span>
                 </v-flex>
             </v-layout>
+            <v-layout
+                column
+                shrink
+                v-if="transferList.length < transfers.length">
+                <v-btn
+                    flat
+                    color="info"
+                    @click="showMore">
+                    Show more
+                </v-btn>
+            </v-layout>
         </v-layout>
     </v-flex>
 </template>
 
 <script>
 import { CoinConfig } from '@/config';
-import { mapGetters } from 'vuex';
+import { mapGetters, mapState } from 'vuex';
 import store from '@/store';
+
+const displayIncrement = 20;
 
 export default {
     name: 'txList',
@@ -94,17 +110,31 @@ export default {
     },
     data () {
         return {
-            coinConfig: CoinConfig
+            coinConfig: CoinConfig,
+            displayCount: displayIncrement
         };
     },
     computed: {
         ...mapGetters({
             strings: 'i18n/strings'
         }),
+        ...mapState({
+            walletLoading: state => state.wallet.walletLoading,
+        }),
         isMobile () {
 
             return this.$vuetify.breakpoint.smAndDown;
         },
+        transferList () {
+
+            return this.transfers.slice(0, this.displayCount);
+        }
+    },
+    methods: {
+        showMore () {
+
+            this.displayCount += displayIncrement;
+        }
     }
 };
 </script>

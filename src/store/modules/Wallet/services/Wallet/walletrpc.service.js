@@ -26,23 +26,43 @@ const rpcMethods = {
     transfer: 'transfer'
 };
 
-let _rpcCreds = new WeakMap();
+const localStorageRpc = 'wenRpc';
+
+let _rpcLogin = new WeakMap();
 let _walletName = new WeakMap();
 
 export default class WalletRpcService {
 
     /**
     * @name constructor
-    * @param {object} connection Optional connection override.
-    * @param {string} connection.walletUrl
-    * @param {object} connection.rpcCredentials
-    * @param {string} connection.rpcCredentials.username
-    * @param {string} connection.rpcCredentials.password
     */
-    constructor (connection) {
+    constructor () {
 
-        let walletUrl = (connection && connection.walletUrl) ?
-            connection.walletUrl : WalletConfig.remoteWallet.address;
+        let walletUrl = WalletConfig.remoteWallet.rpcAddress;
+
+        if (WalletConfig.remoteWallet.rpcLogin) {
+
+            _rpcLogin.set(this, {
+                username: WalletConfig.remoteWallet.rpcLogin.rpcUser,
+                password: WalletConfig.remoteWallet.rpcLogin.rpcPassword
+            });
+        }
+
+        let savedRpc = localStorage.getItem(localStorageRpc);
+        if (savedRpc) {
+
+            try {
+
+                let rpcConn = JSON.parse(atob(savedRpc));
+                walletUrl = rpcConn.rpcAddress;
+                _rpcLogin.set(this, {
+                    username: rpcConn.rpcUser,
+                    password: rpcConn.rpcPassword
+                });
+            } catch (err) {
+
+            }
+        }
 
         if (!walletUrl) {
 
@@ -51,24 +71,17 @@ export default class WalletRpcService {
 
         this.baseUrl = walletUrl;
         this.jsonRpcApi = WalletConfig.remoteWallet.jsonRpc || 'json_rpc';
-
-        if (connection && connection.rpcCredentials) {
-
-            _rpcCreds.set(this, connection.rpcCredentials);
-        } else if (WalletConfig.remoteWallet.rpcCredentials) {
-
-            _rpcCreds.set(this, WalletConfig.remoteWallet.rpcCredentials);
-        }
     };
 
-    set walletUrl (walletUrl) {
+    set rpcConnection (connection) {
 
-        this.baseUrl = walletUrl;
-    };
-
-    set rpcCredentials (creds) {
-
-        _rpcCreds.set(this, creds);
+        this.baseUrl = connection.rpcAddress || this.baseUrl;
+        _rpcLogin.set(this, {
+            username: connection.rpcUser,
+            password: connection.rpcPassword
+        });
+        let rpcConnStr = btoa(JSON.stringify(connection));
+        localStorage.setItem(localStorageRpc, rpcConnStr);
     };
 
     /**
@@ -211,7 +224,17 @@ export default class WalletRpcService {
     */
     getKeys () {
 
-        return this.jsonRpc(rpcMethods.getKeys, { key_type: 'mnemonic' });
+        return Promise.all([
+            this.jsonRpc(rpcMethods.getKeys, { key_type: 'mnemonic' }),
+            this.jsonRpc(rpcMethods.getKeys, { key_type: 'all_keys' })
+        ]).then((responses) => {
+
+            responses[1].mnemonic = responses[0].mnemonic;
+            return responses[1];
+        }).catch((err) => {
+
+            return Promise.reject(err);
+        });
     };
 
     /**
@@ -242,7 +265,8 @@ export default class WalletRpcService {
                 amount: txParams.amount,
                 address: txParams.address
             }],
-            payment_id: txParams.paymentId || undefined
+            payment_id: txParams.paymentId || undefined,
+            priority: txParams.priority || 0
         };
 
         return this.jsonRpc(rpcMethods.transfer, params);
@@ -264,7 +288,7 @@ export default class WalletRpcService {
             url: this.jsonRpcApi,
             method: 'post',
             data: requestBody,
-            auth: _rpcCreds.get(this) || {}
+            auth: _rpcLogin.get(this) || {}
         }).then((response) => {
 
             if (!response.data) {

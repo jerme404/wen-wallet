@@ -1,9 +1,11 @@
 {
   "name": "wen-wallet",
   "version": "0.1.0",
+  "author": "JerMe404 (https://github.com/jerme404)",
   "private": true,
   "scripts": {
     "build": "vue-cli-service build",
+    "build-with-path": "vue-cli-service build --mode withpath",
     "lint": "vue-cli-service lint",
     "cordova-build-android": "CORDOVA_PLATFORM=android vue-cli-service cordova-build-android",
     "cordova-build-browser": "CORDOVA_PLATFORM=browser vue-cli-service cordova-build-browser",
@@ -24,8 +26,8 @@
   "dependencies": {
     "@babel/polyfill": "^7.0.0-rc.1",
     "@fortawesome/fontawesome-free": "^5.2.0",
+    "apexcharts": "^3.8.6",
     "axios": "^0.18.0",
-    "chart.js": "^2.8.0",
     "moment": "^2.24.0",
     "roboto-fontface": "*",
     "toastify-js": "^1.6.1",

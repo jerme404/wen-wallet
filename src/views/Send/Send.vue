@@ -1,88 +1,86 @@
 <template>
-    <v-layout column v-bind:class="{ 'py-2': !isMobile }">
-        <v-layout row wrap class="no-grow" v-bind:class="{ 'px-2': !isMobile }">
-            <v-flex xs12 md4 offset-xl1 d-flex v-bind:class="{ 'pa-2': !isMobile, 'pt-1 px-1': isMobile }">
+    <v-layout column class="pb-3 primary">
+        <v-layout row wrap shrink v-bind:class="{ 'pa-2': !isMobile }">
+            <v-flex
+                xs12
+                md4
+                xl3
+                offset-xl1
+                class="pa-2">
                 <v-layout
                     column
-                    class="px-3 py-2 primary elevation-1 no-select"
-                    v-if="balance">
-                    <v-layout row shrink>
-                        <span class="body-2 secondary--text text--darken-1">
-                            {{ strings.available || 'Available' }}
-                        </span>
-                        <v-spacer></v-spacer>
-                    </v-layout>
-                    <v-layout row shrink>
-                        <span class="title pb-2 success--text font-weight-medium">
-                            {{ balance.unlocked.toFixed(coinConfig.coinUnitPlaces) }} {{ coinConfig.coinSymbol }}
-                        </span>
-                        <v-spacer></v-spacer>
-                    </v-layout>
-                    <v-spacer></v-spacer>
-                    <v-layout row shrink>
-                        <v-layout column shrink align-start>
-                            <span class="body-2 secondary--text text--darken-1">
-                                {{ strings.total || 'Total' }}
-                            </span>
-                            <span class="subheading pb-2 font-weight-medium">
-                                {{ balance.total.toFixed(coinConfig.coinUnitPlaces) }}
-                            </span>
-                        </v-layout>
-                        <v-spacer></v-spacer>
-                        <v-layout column shrink align-start>
-                            <span class="body-2 secondary--text text--darken-1">
-                                {{ strings.locked || 'Locked' }}
-                            </span>
-                            <span class="subheading pb-2 error--text font-weight-medium">
-                                {{ balance.locked.toFixed(coinConfig.coinUnitPlaces) }}
-                            </span>
-                        </v-layout>
-                    </v-layout>
+                    fill-height
+                    class="primary lighten-1 elevation-2">
+                    <balance></balance>
                 </v-layout>
             </v-flex>
-            <v-flex xs12 md8 xl6 d-flex v-bind:class="{ 'pa-2': !isMobile, 'pt-1 px-1': isMobile }">
+            <v-flex
+                xs12
+                md8
+                xl7
+                class="px-2"
+                v-bind:class="{ 'pa-2': !isMobile }">
                 <v-layout
                     column
-                    class="px-3 pb-3 primary elevation-1">
-                    <v-layout row align-center>
-                        <v-text-field
-                            v-model="newTx.amount"
-                            class="px-1"
-                            dark
-                            hide-details
-                            color="#FAFAFA"
-                            @input="onAmountChange"
-                            :suffix="coinConfig.coinSymbol"
-                            :label="strings.amount || 'Amount'">
-                        </v-text-field>
-                        <v-spacer></v-spacer>
-                        <span
-                            class="mt-2 ml-3 send-button font-weight-bold no-select cursor-pointer"
-                            v-bind:class="{ 'pt-3': !isMobile }"
+                    fill-height
+                    class="primary lighten-1 elevation-2">
+                    <v-layout column class="pa-3">
+                        <v-layout row>
+                            <v-flex xs12 md6>
+                                <v-text-field
+                                    v-model="newTx.amount"
+                                    class="px-1"
+                                    dark
+                                    hide-details
+                                    color="#FAFAFA"
+                                    @input="onAmountChange"
+                                    :suffix="coinConfig.coinSymbol"
+                                    :label="strings.amount || 'Amount'">
+                                </v-text-field>
+                            </v-flex>
+                            <v-layout row grow align-end justify-end v-if="!isMobile">
+                                <v-btn
+                                    flat
+                                    color="success"
+                                    class="ma-0"
+                                    :disabled="sendButtonDisabled"
+                                    @click="sendTx">
+                                    SEND
+                                </v-btn>
+                            </v-layout>
+                        </v-layout>
+                        <v-layout row align-center>
+                            <v-text-field
+                                v-model="newTx.address"
+                                class="px-1"
+                                dark
+                                hide-details
+                                clearable
+                                clear-icon="fas fa-times-circle"
+                                color="#FAFAFA"
+                                :label="strings.address || 'Address'">
+                            </v-text-field>
+                        </v-layout>
+                        <v-btn
+                            outline
+                            color="success"
+                            class="mt-4"
+                            :disabled="sendButtonDisabled"
+                            v-if="isMobile"
                             @click="sendTx">
                             SEND
-                        </span>
+                        </v-btn>
                     </v-layout>
-                    <v-layout row align-center>
-                        <v-text-field
-                            v-model="newTx.address"
-                            class="px-1"
-                            dark
-                            hide-details
-                            color="#FAFAFA"
-                            :label="strings.address || 'Address'">
-                        </v-text-field>
-                    </v-layout>
-                    <v-spacer></v-spacer>
                 </v-layout>
             </v-flex>
         </v-layout>
+
         <v-layout row wrap class="no-grow" v-bind:class="{ 'px-2': !isMobile }">
-            <v-flex xs12 xl10 offset-xl1 v-bind:class="{ 'pa-2': !isMobile, 'pt-1 px-1': isMobile }">
-                <v-layout column class="px-3 py-2 primary elevation-1">
+            <v-flex xs12 xl10 offset-xl1 class="px-2" v-bind:class="{ 'pa-2': isMobile }">
+                <v-layout column class="pa-3 primary lighten-1 elevation-2">
                     <v-layout row>
                         <span class="body-2 no-select secondary--text text--darken-1">
-                            {{ strings.recentTransactions || 'Recent Transactions' }}
+                            {{ `${strings.recentTransactions || 'Recent Transactions'} (${transfers.length})` }}
                         </span>
                         <v-spacer></v-spacer>
                     </v-layout>
@@ -131,11 +129,13 @@
 import { CoinConfig } from '@/config';
 import { mapActions, mapGetters, mapState } from 'vuex';
 import store from '@/store';
+const Balance = () => import('@/components/Balance');
 const TxList = () => import('@/components/TxList');
 
 export default {
     name: 'send',
     components: {
+        'balance': Balance,
         'tx-list': TxList
     },
     props: {},
@@ -146,7 +146,7 @@ export default {
             newTx: {
                 amount: '',
                 address: '',
-                paymentId: ''
+                priority: 0
             },
             coinConfig: CoinConfig
         };
@@ -163,6 +163,10 @@ export default {
         isMobile () {
 
             return this.$vuetify.breakpoint.smAndDown;
+        },
+        sendButtonDisabled () {
+
+            return !this.newTx.address || !this.newTx.amount;
         }
     },
     methods: {
@@ -210,19 +214,19 @@ export default {
         },
         confirmSend () {
 
-            let amount = Number(this.newTx.amount) * Math.pow(10, CoinConfig.coinUnitPlaces);
-            let address = this.newTx.address;
-            //let paymentId = this.newTx.paymentId;
+            let amount = Number(this.newTx.amount) * Math.pow(10, CoinConfig.coinUnitPlaces),
+                address = this.newTx.address,
+                priority = this.newTx.priority;
 
             this.txSending = true;
-            this.transfer({ amount, address }).then(() => {
+            this.transfer({ amount, address, priority }).then(() => {
 
                 this.txConfirmDialog = false;
                 this.txSending = false;
                 this.newTx = {
                     amount: '',
                     address: '',
-                    paymentId: ''
+                    priority: 0
                 };
             }).catch((err) => {
 

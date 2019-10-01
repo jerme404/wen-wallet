@@ -1,12 +1,11 @@
 <template>
-    <v-app class="primary darken-1">
+    <v-app class="primary">
         <login v-if="!address"></login>
         <v-toolbar
             app
             fixed
             flat
-            color="primary"
-            class="elevation-2"
+            color="primary lighten-1 elevation-1"
             v-if="address && showNav">
             <nav-top app :isMobile="isMobile"></nav-top>
         </v-toolbar>
@@ -19,7 +18,7 @@
                 scrollable
                 persistent
                 lazy
-                width="800">
+                width="700">
                 <wallet-keys
                     v-if="showKeys && walletKeys"
                     :walletKeys="walletKeys">
@@ -89,19 +88,15 @@ export default {
         ...mapActions({
             loadExplorer: 'explorer/explorerLoad',
             unloadExplorer: 'explorer/explorerUnload',
-            loadWallet: 'wallet/walletLoad',
-            loadAddressBook: 'addressBook/addressBookLoad',
-            unloadAddressBook: 'addressBook/addressBookUnload'
+            loadWallet: 'wallet/walletLoad'
         }),
         onSignIn () {
 
             this.loadExplorer();
-            this.loadAddressBook(this.address);
         },
         onSignOut () {
 
             this.unloadExplorer();
-            this.unloadAddressBook();
         }
     }
 };

@@ -3,9 +3,17 @@
         <v-card-text class="primary">
             <v-layout column class="pt-3">
                 <span class="body-1 no-select">Wallet Address</span>
-                <span class="py-2 mb-3 subheading success--text address">{{ walletKeys.address }}</span>
+                <span class="pt-1 pb-2 body-1 success--text address">{{ walletKeys.address }}</span>
+                <span class="body-1 no-select">Public View</span>
+                <span class="py-2 body-1 info--text address">{{ walletKeys.keys.public_view_key }}</span>
+                <span class="body-1 no-select">Public Spend</span>
+                <span class="py-2 body-1 info--text address">{{ walletKeys.keys.public_spend_key }}</span>
+                <span class="body-1 no-select">Private View</span>
+                <span class="py-2 body-1 error--text address">{{ walletKeys.keys.private_view_key }}</span>
+                <span class="body-1 no-select">Private Spend</span>
+                <span class="py-2 body-1 error--text address">{{ walletKeys.keys.private_spend_key }}</span>
                 <span class="body-1 no-select">Seed Phrase</span>
-                <span class="py-2 subheading error--text">{{ walletKeys.seed }}</span>
+                <span class="py-2 body-1 error--text">{{ walletKeys.keys.mnemonic }}</span>
             </v-layout>
         </v-card-text>
         <v-card-actions class="primary">

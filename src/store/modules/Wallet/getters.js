@@ -31,14 +31,14 @@ const getters = {
     },
     walletHistory: (state) => {
 
-        if (!state.walletInfo.transfers) {
+        if (!state.transfers) {
 
             return [];
         }
 
-        let transfers = Object.keys(state.walletInfo.transfers).reduce((txes, direction) => {
+        let transfers = Object.keys(state.transfers).reduce((txes, direction) => {
 
-            state.walletInfo.transfers[direction].forEach((tx) => {
+            state.transfers[direction].forEach((tx) => {
 
                 txes.push(txModel(tx, direction));
             });
@@ -52,11 +52,11 @@ const getters = {
     },
     walletHistoryIn: (state) => {
 
-        if (!state.walletInfo.transfers || !state.walletInfo.transfers.in) {
+        if (!state.transfers || !state.transfers.in) {
 
             return [];
         }
-        let transfers = [...state.walletInfo.transfers.in].map(tx => txModel(tx, 'in'));
+        let transfers = [...state.transfers.in].map(tx => txModel(tx, 'in'));
         transfers.sort((a, b) => {
 
             return b.timestamp - a.timestamp;
@@ -65,11 +65,11 @@ const getters = {
     },
     walletHistoryOut: (state) => {
 
-        if (!state.walletInfo.transfers || !state.walletInfo.transfers.out) {
+        if (!state.transfers || !state.transfers.out) {
 
             return [];
         }
-        let transfers = [...state.walletInfo.transfers.out].map(tx => txModel(tx, 'out'));
+        let transfers = [...state.transfers.out].map(tx => txModel(tx, 'out'));
         transfers.sort((a, b) => {
 
             return b.timestamp - a.timestamp;
@@ -78,31 +78,47 @@ const getters = {
     },
     txChart: (state) => {
 
-        let transfers = state.walletInfo.transfers;
-        if (!transfers || (!transfers.in && !transfers.out)) {
+        let transfers = state.transfers ? {
+            in: state.transfers.in || [],
+            out: state.transfers.out || []
+        } : {
+            in: [],
+            out: []
+        };
 
-            return;
+        let pastDays = 6;
+        if (state.txChartRange == state.txChartRanges.month) {
+
+            pastDays = 30;
+        } else if (state.txChartRange == state.txChartRanges.all) {
+
+            let allTxTimes = transfers.in.concat(transfers.out).map(tx => tx.timestamp);
+            if (allTxTimes.length > 0) {
+
+                let firstTx = moment.unix(Math.min(...allTxTimes));
+                pastDays = moment().diff(firstTx, 'd');
+            }
         }
 
         let dateFormat = 'YYYY-MM-DD',
-            date = moment().subtract(6, 'd');
+            date = moment().subtract(pastDays, 'd');
 
         let dateTotals = {};
 
         // Generate 7 days of dates.
-        for (let i = 0; i < 7; i++) {
+        for (let i = 0; i <= pastDays; i++) {
 
             dateTotals[date.format(dateFormat)] = {
-                dayName: date.format('ddd'),
+                dayName: date.format('L'),
                 in: 0,
                 out: 0
             };
             date.add(1, 'd');
         }
 
-        Object.keys(state.walletInfo.transfers).forEach((direction) => {
+        Object.keys(state.transfers).forEach((direction) => {
 
-            state.walletInfo.transfers[direction].forEach((tx) => {
+            state.transfers[direction].forEach((tx) => {
 
                 let txDate = moment.unix(tx.timestamp).format(dateFormat);
                 if (dateTotals[txDate]) {
@@ -114,37 +130,33 @@ const getters = {
 
         let chartData = Object.values(dateTotals).reduce((chart, dateTotal) => {
 
-            chart.labels.push(dateTotal.dayName);
+            chart.dates.push(dateTotal.dayName);
             chart.in.push(dateTotal.in);
             chart.out.push(dateTotal.out);
             return chart;
-        }, { labels: [], in: [], out: []});
+        }, { dates: [], in: [], out: []});
 
         return {
-            labels: chartData.labels,
-            datasets: [
+            yAxis: [
                 {
-                    label: 'In',
-                    data: chartData.in,
-                    type: 'line',
-                    borderColor: '#11D9A0',
-                    borderWidth: 2,
-                    fill: false,
-                    pointRadius: 0,
-                    pointHitRadius: 2,
-                    lineTension: 0
+                    decimalsInFloat: 2,
+                    labels: {
+                        show: false
+                    }
                 },
                 {
-                    label: 'Out',
-                    data: chartData.out,
-                    type: 'line',
-                    borderColor: '#E65055',
-                    borderWidth: 2,
-                    fill: false,
-                    pointRadius: 0,
-                    pointHitRadius: 2,
-                    lineTension: 0
+                    decimalsInFloat: 2,
+                    labels: {
+                        show: false
+                    }
                 }
+            ],
+            xAxis: {
+                categories: chartData.dates
+            },
+            series: [
+                { name: 'Received', data: chartData.in },
+                { name: 'Sent', data: chartData.out }
             ]
         };
     }

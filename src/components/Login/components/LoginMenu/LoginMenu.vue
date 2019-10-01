@@ -1,17 +1,19 @@
 <template>
     <v-layout row shrink align-center justify-center>
         <span
-            class="px-3 login-tab cursor-pointer"
+            class="px-3 subheading login-tab cursor-pointer"
             v-bind:class="{ 'tab-active cursor-default': activeTab == 'open' }"
             @click="setActiveTab('open')">
             Open
         </span>
+        <span>/</span>
         <span
             class="px-3 login-tab cursor-pointer"
             v-bind:class="{ 'tab-active cursor-default': activeTab == 'create' }"
             @click="setActiveTab('create')">
             Create
         </span>
+        <span>/</span>
         <span
             class="px-3 login-tab cursor-pointer"
             v-bind:class="{ 'tab-active cursor-default': activeTab == 'import' }"
@@ -55,10 +57,11 @@ export default {
 <style scoped>
 .login-tab {
     color: #AEAEAE;
-    text-transform: uppercase;
-    font-weight: 500;
+font-weight: 600;
+
 }
 .tab-active {
-    color: #FEFEFE;
+    color: #7D83FF;
+
 }
 </style>

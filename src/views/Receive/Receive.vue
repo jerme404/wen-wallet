@@ -1,16 +1,27 @@
 <template>
-    <v-layout column v-bind:class="{ 'py-2': !isMobile }">
-        <v-layout row wrap class="no-grow" v-bind:class="{ 'px-2': !isMobile }">
-            <v-flex xs12 xl10 offset-xl1 d-flex v-bind:class="{ 'pa-2': !isMobile, 'pt-1 px-1': isMobile }">
-                <v-layout column shrink class="pa-3 primary elevation-1">
-                    <span class="subheading receive-address">{{ walletAddress }}</span>
+    <v-layout column class="pb-3 primary">
+        <v-layout row wrap shrink v-bind:class="{ 'pa-2': !isMobile }">
+            <v-flex
+                xs12
+                xl10
+                offset-xl1
+                class="pa-2">
+                <v-layout
+                    column
+                    fill-height
+                    class="primary lighten-1 elevation-2">
+                    <v-layout row align-center justify-center class="pa-3">
+                        <span class="subheading font-weight-medium receive-address">{{ walletAddress }}</span>
+                    </v-layout>
                 </v-layout>
             </v-flex>
-            <v-flex xs12 xl10 offset-xl1 v-bind:class="{ 'pa-2': !isMobile, 'pt-1 px-1': isMobile }">
-                <v-layout column class="px-3 py-2 primary elevation-1">
+        </v-layout>
+        <v-layout row wrap class="no-grow" v-bind:class="{ 'px-2': !isMobile }">
+            <v-flex xs12 xl10 offset-xl1 class="px-2">
+                <v-layout column class="pa-3 primary lighten-1 elevation-2">
                     <v-layout row>
                         <span class="body-2 no-select secondary--text text--darken-1">
-                            {{ strings.recentTransactions || 'Recent Transactions' }}
+                            {{ `${strings.recentTransactions || 'Recent Transactions'} (${transfers.length})` }}
                         </span>
                         <v-spacer></v-spacer>
                     </v-layout>

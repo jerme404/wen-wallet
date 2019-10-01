@@ -1,16 +1,11 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-const AddressBook = () => import('@/views/AddressBook');
-const Dashboard = () => import('@/views/Dashboard');
-const Receive = () => import('@/views/Receive');
-const Send = () => import('@/views/Send');
-const Settings = () => import('@/views/Settings');
 
 Vue.use(Router);
 
 const router = new Router({
     mode: (window.cordova) ? 'hash' : 'history',
-    base: process.env.CORDOVA_PLATFORM ? '' : '/',
+    base: process.env.BASE_URL,
     scrollBehavior (to, from, savedPosition) {
         return { x: 0, y: 0 };
     },
@@ -18,25 +13,16 @@ const router = new Router({
         {
             path: '/',
             name: 'dashboard',
-            component: Dashboard,
+            component: () => import('@/views/Dashboard'),
             meta: {
                 showNav: true,
                 title: 'Dashboard'
             }
         },
         {
-            path: '/addressBook',
-            name: 'addressBook',
-            component: AddressBook,
-            meta: {
-                showNav: true,
-                title: 'Address Book'
-            }
-        },
-        {
             path: '/receive',
             name: 'receive',
-            component: Receive,
+            component: () => import('@/views/Receive'),
             meta: {
                 showNav: true,
                 title: 'Receive'
@@ -45,7 +31,7 @@ const router = new Router({
         {
             path: '/send',
             name: 'send',
-            component: Send,
+            component: () => import('@/views/Send'),
             meta: {
                 showNav: true,
                 title: 'Send'
@@ -54,7 +40,7 @@ const router = new Router({
         {
             path: '/settings',
             name: 'settings',
-            component: Settings,
+            component: () => import('@/views/Settings'),
             meta: {
                 showNav: true,
                 title: 'Settings'

@@ -1,5 +1,11 @@
 import WalletService from './services/Wallet';
 
+const txChartRanges = {
+    all: 'All',
+    month: 'Month',
+    week: 'Week'
+};
+
 const state = {
     walletUpdateTimer: undefined,
     walletLoading: false,
@@ -10,7 +16,10 @@ const state = {
         height: 0,
         transfers: {}
     },
-    walletKeyDisplay: undefined
+    transfers: {},
+    walletKeyDisplay: undefined,
+    txChartRanges: txChartRanges,
+    txChartRange: txChartRanges.week
 };
 
 state.walletService = new WalletService();

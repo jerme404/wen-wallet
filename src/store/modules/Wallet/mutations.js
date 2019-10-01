@@ -26,9 +26,9 @@ const mutations = {
         state.walletInfo = {
             address: undefined,
             balance: undefined,
-            height: 0,
-            transfers: {}
+            height: 0
         };
+        state.transfers = {};
     },
     walletSetName: (state, walletName) => {
 
@@ -48,11 +48,15 @@ const mutations = {
     },
     walletSetTransfers: (state, transfers) => {
 
-        Vue.set(state.walletInfo, 'transfers', transfers);
+        state.transfers = transfers;
     },
     walletSetKeyDisplay: (state, keyDisplay) => {
 
-        Vue.set(state, 'walletKeyDisplay', keyDisplay);
+        state.walletKeyDisplay = keyDisplay;
+    },
+    walletSetTxChartRange: (state, chartRange) => {
+
+        state.txChartRange = chartRange;
     }
 };
 
