@@ -10,7 +10,7 @@
             <nav-top app :isMobile="isMobile"></nav-top>
         </v-toolbar>
         <v-content v-if="address">
-            <v-container fluid fill-height class="pa-0 primary darken-1">
+            <v-container fluid fill-height class="app-container pa-0 primary darken-1">
                 <router-view></router-view>
             </v-container>
             <v-dialog

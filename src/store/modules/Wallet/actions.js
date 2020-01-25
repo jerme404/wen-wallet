@@ -161,6 +161,19 @@ const actions = {
             return Promise.reject(err);
         });
     },
+    sweepAll: ({ dispatch, state }, address) => {
+
+        return state.walletService.sweepAll(address).then((response) => {
+
+            Vue.prototype.$notify.success('Transfer sent');
+            dispatch('getBalance');
+            return response.tx_hash;
+        }).catch((err) => {
+
+            Vue.prototype.$notify.error(err.errorMessage || 'Transfer error');
+            return Promise.reject(err);
+        });
+    },
     transfer: ({ dispatch, state }, txParams) => {
 
         return state.walletService.transfer(txParams).then((response) => {

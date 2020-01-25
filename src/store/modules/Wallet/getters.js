@@ -96,7 +96,7 @@ const getters = {
             if (allTxTimes.length > 0) {
 
                 let firstTx = moment.unix(Math.min(...allTxTimes));
-                pastDays = moment().diff(firstTx, 'd');
+                pastDays = moment().diff(firstTx, 'd') + 1;
             }
         }
 

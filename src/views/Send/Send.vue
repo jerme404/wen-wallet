@@ -171,6 +171,7 @@ export default {
     },
     methods: {
         ...mapActions({
+            sweepAll: 'wallet/sweepAll',
             transfer: 'wallet/transfer'
         }),
         onAmountChange (newAmount) {
@@ -204,6 +205,10 @@ export default {
 
                 this.$notify.error('Not enough funds');
                 return;
+            } else if (amount <= 0) {
+
+                this.$notify.error('Invalid amount');
+                return;
             }
 
             this.txConfirmDialog = true;
@@ -217,6 +222,7 @@ export default {
             let amount = Number(this.newTx.amount) * Math.pow(10, CoinConfig.coinUnitPlaces),
                 address = this.newTx.address,
                 priority = this.newTx.priority;
+
 
             this.txSending = true;
             this.transfer({ amount, address, priority }).then(() => {

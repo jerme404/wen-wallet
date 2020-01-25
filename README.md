@@ -49,10 +49,3 @@ location / {
 ```
 
 See the [vue-router history mode docs](https://router.vuejs.org/guide/essentials/history-mode.html#example-server-configurations).
-
-
-## Feature Backlog
-Generate a payment link from the Receive page.  
-Reporting tools for transfer list.  
-Multi-tenant, hosted wallet service.  
-Local, in-browser wallet service.  

@@ -16,7 +16,7 @@ const router = new Router({
             component: () => import('@/views/Dashboard'),
             meta: {
                 showNav: true,
-                title: 'Dashboard'
+                title: 'dashboard'
             }
         },
         {
@@ -25,7 +25,7 @@ const router = new Router({
             component: () => import('@/views/Receive'),
             meta: {
                 showNav: true,
-                title: 'Receive'
+                title: 'receive'
             }
         },
         {
@@ -34,7 +34,7 @@ const router = new Router({
             component: () => import('@/views/Send'),
             meta: {
                 showNav: true,
-                title: 'Send'
+                title: 'send'
             }
         },
         {
@@ -43,7 +43,7 @@ const router = new Router({
             component: () => import('@/views/Settings'),
             meta: {
                 showNav: true,
-                title: 'Settings'
+                title: 'settings'
             }
         }
     ]

@@ -23,6 +23,7 @@ const rpcMethods = {
     getHeight: 'get_height',
     getKeys: 'query_key',
     getTransfers: 'get_transfers',
+    sweepAll: 'sweep_all',
     transfer: 'transfer'
 };
 
@@ -251,6 +252,16 @@ export default class WalletRpcService {
             out: options && options.out
         };
         return this.jsonRpc(rpcMethods.getTransfers, params);
+    };
+
+    /**
+    * @name sweepAll
+    * @description Sends all unlocked balance to an address.
+    * @param {string} address
+    */
+    sweepAll (address) {
+
+        return this.jsonRpc(rpcMethods.sweepAll, { address: address });
     };
 
     /**

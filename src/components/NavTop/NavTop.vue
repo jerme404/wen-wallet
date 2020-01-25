@@ -2,13 +2,60 @@
     <v-layout row grow class="no-select">
         <v-flex xs12 xl10 offset-xl1>
             <v-layout row align-center>
-                <v-layout row shrink>
+                <v-layout row grow align-center v-if="!isMobile">
                     <img
-                        src="@/assets/logo.png"
+                        src="@/assets/nerva-wallet.png"
                         alt="Logo"
                         class="nav-logo">
                 </v-layout>
-                <v-spacer/>
+                <v-layout row grow align-center v-else>
+                    <v-flex xs3>
+                        <v-layout align-center justify-start>
+                            <img
+                                src="@/assets/logo.png"
+                                alt="Logo"
+                                class="nav-logo-mobile">
+                        </v-layout>
+                    </v-flex>
+                    <v-flex xs6>
+                        <v-layout row align-center justify-center>
+                            <span class="subheading font-weight-medium secondary--text text--lighten-1">
+                                {{ currentRoute }}
+                            </span>
+                        </v-layout>
+                    </v-flex>
+                    <v-flex xs3>
+                        <v-layout row align-center justify-end>
+                            <v-menu bottom left>
+                                <v-icon
+                                    slot="activator"
+                                    size="16"
+                                    class="nav-link cursor-pointer">
+                                    fas fa-fw fa-ellipsis-v
+                                </v-icon>
+                                <v-layout column class="primary darken-1">
+                                    <v-layout
+                                        row
+                                        align-center
+                                        class="px-3 py-2 menu-link cursor-pointer no-select"
+                                        @click="showWalletKeys">
+                                        <v-icon size="18" color="accent">fas fa-fw fa-sign-out-alt</v-icon>
+                                        <span class="px-3">{{ strings.walletKeys || 'Wallet Keys' }}</span>
+                                    </v-layout>
+                                    <v-divider></v-divider>
+                                    <v-layout
+                                        row
+                                        align-center
+                                        class="px-3 py-2 menu-link cursor-pointer no-select"
+                                        @click="signOut">
+                                        <v-icon size="18" color="accent">fas fa-fw fa-sign-out-alt</v-icon>
+                                        <span class="px-3">{{ strings.signOut || 'Sign Out' }}</span>
+                                    </v-layout>
+                                </v-layout>
+                            </v-menu>
+                        </v-layout>
+                    </v-flex>
+                </v-layout>
                 <v-layout
                     row
                     shrink
@@ -24,9 +71,8 @@
                     <router-link to="/receive" class="px-2 mx-1 py-2 nav-link" exact>
                         <span>{{ strings.receive || 'Receive' }}</span>
                     </router-link>
-
                 </v-layout>
-                <v-menu bottom left>
+                <v-menu bottom left v-if="!isMobile">
                     <v-icon
                         slot="activator"
                         size="16"
@@ -83,7 +129,8 @@ export default {
             strings: 'i18n/strings'
         }),
         currentRoute () {
-            return this.$route.meta.title;
+
+            return this.strings[this.$route.meta.title] || this.$route.meta.title;
         }
     },
     methods: {
@@ -107,6 +154,10 @@ export default {
 <style scoped>
 .nav-logo {
     height: 42px;
+    width: auto;
+}
+.nav-logo-mobile {
+    height: 36px;
     width: auto;
 }
 .nav-link{
@@ -136,6 +187,6 @@ export default {
 .router-link-active .menu-link,
 .router-link-exact-active .menu-link {
     cursor: default;
-    color: #EDEFF0;
+    color: #FAFBFC;
 }
 </style>
