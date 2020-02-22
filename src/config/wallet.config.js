@@ -13,8 +13,8 @@ export default {
     },
     explorer: {
         api: 'https://us-central1-nerva-248022.cloudfunctions.net/nervaApi',
-        txHashMask: 'https://explorer.getnerva.org/detail/<hash>',
-        blockHashMask: 'https://explorer.getnerva.org/detail/<hash>'
+        txHashMask: 'https://getnerva.org/explorer/detail/<hash>',
+        blockHashMask: 'https://getnerva.org/explorer/detail/<hash>'
     },
     tagline: 'Nerva Wallet'
 };

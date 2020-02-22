@@ -23,10 +23,11 @@ const rpcMethods = {
     getHeight: 'get_height',
     getKeys: 'query_key',
     getTransfers: 'get_transfers',
+    sweepAll: 'sweep_all',
     transfer: 'transfer'
 };
 
-const localStorageRpc = 'wenRpc';
+const LS_RPC = 'wenRpc';
 
 let _rpcLogin = new WeakMap();
 let _walletName = new WeakMap();
@@ -48,7 +49,7 @@ export default class WalletRpcService {
             });
         }
 
-        let savedRpc = localStorage.getItem(localStorageRpc);
+        let savedRpc = localStorage.getItem(LS_RPC);
         if (savedRpc) {
 
             try {
@@ -81,7 +82,7 @@ export default class WalletRpcService {
             password: connection.rpcPassword
         });
         let rpcConnStr = btoa(JSON.stringify(connection));
-        localStorage.setItem(localStorageRpc, rpcConnStr);
+        localStorage.setItem(LS_RPC, rpcConnStr);
     };
 
     /**
@@ -251,6 +252,16 @@ export default class WalletRpcService {
             out: options && options.out
         };
         return this.jsonRpc(rpcMethods.getTransfers, params);
+    };
+
+    /**
+    * @name sweepAll
+    * @description Sends all unlocked balance to an address.
+    * @param {string} address
+    */
+    sweepAll (address) {
+
+        return this.jsonRpc(rpcMethods.sweepAll, { address: address });
     };
 
     /**

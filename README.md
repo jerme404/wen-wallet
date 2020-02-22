@@ -51,8 +51,6 @@ location / {
 See the [vue-router history mode docs](https://router.vuejs.org/guide/essentials/history-mode.html#example-server-configurations).
 
 
-## Feature Backlog
-Generate a payment link from the Receive page.  
-Reporting tools for transfer list.  
-Multi-tenant, hosted wallet service.  
-Local, in-browser wallet service.  
+## Connecting to wallet-rpc
+```bash
+./nerva-wallet-rpc --rpc-bind-port <whatever port you want wallet to listen on> --wallet-dir <wallet directory on disk> --rpc-login nerva:nerva --rpc-access-control-origins <CORS addresses, your web server URL> --rpc-auth-basic --trusted-daemon --log-level 3 --rpc-bind-ip <0.0.0.0 or your IP address> --confirm-external-bind --confirm-cleartext-auth```
