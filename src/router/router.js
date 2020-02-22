@@ -45,6 +45,15 @@ const router = new Router({
                 showNav: true,
                 title: 'settings'
             }
+        },
+        {
+            path: '/launcher',
+            name: 'launcher',
+            component: () => import('@/views/Launcher'),
+            meta: {
+                showNav: false,
+                title: 'Launcher'
+            }
         }
     ]
 });

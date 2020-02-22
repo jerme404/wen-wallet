@@ -94,11 +94,20 @@ const actions = {
     updateWallet: ({ commit, dispatch, state }) => {
 
         commit('walletSetLoading', true);
+        let oldBalance = state.walletInfo.balance;
+
         return Promise.all([
             dispatch('getBalance'),
-            dispatch('getHeight'),
-            dispatch('getTransfers')
+            dispatch('getHeight')
         ]).then(() => {
+
+            let newBalance = state.walletInfo.balance;
+            if (!oldBalance || oldBalance.balance != newBalance.balance) {
+
+                return dispatch('getTransfers');
+            }
+            return Promise.resolve();
+        }).then(() => {
 
             commit('walletSetLoading', false);
         }).catch((err) => {
@@ -139,7 +148,10 @@ const actions = {
     },
     getTransfers: ({ commit, state }) => {
 
-        return state.walletService.getTransfers({ in: true, out: true }).then((transfers) => {
+        return state.walletService.getTransfers({
+            in: true,
+            out: true
+        }).then((transfers) => {
 
             transfers.in = transfers.in || [];
             transfers.out = transfers.out || [];

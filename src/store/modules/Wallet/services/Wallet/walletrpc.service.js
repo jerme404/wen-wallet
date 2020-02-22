@@ -27,7 +27,7 @@ const rpcMethods = {
     transfer: 'transfer'
 };
 
-const localStorageRpc = 'wenRpc';
+const LS_RPC = 'wenRpc';
 
 let _rpcLogin = new WeakMap();
 let _walletName = new WeakMap();
@@ -49,7 +49,7 @@ export default class WalletRpcService {
             });
         }
 
-        let savedRpc = localStorage.getItem(localStorageRpc);
+        let savedRpc = localStorage.getItem(LS_RPC);
         if (savedRpc) {
 
             try {
@@ -82,7 +82,7 @@ export default class WalletRpcService {
             password: connection.rpcPassword
         });
         let rpcConnStr = btoa(JSON.stringify(connection));
-        localStorage.setItem(localStorageRpc, rpcConnStr);
+        localStorage.setItem(LS_RPC, rpcConnStr);
     };
 
     /**
