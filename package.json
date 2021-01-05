@@ -27,7 +27,7 @@
     "@babel/polyfill": "^7.0.0-rc.1",
     "@fortawesome/fontawesome-free": "^5.2.0",
     "apexcharts": "^3.8.6",
-    "axios": "^0.18.0",
+    "axios": "^0.21.1",
     "moment": "^2.24.0",
     "roboto-fontface": "*",
     "toastify-js": "^1.6.1",
